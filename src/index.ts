@@ -1,10 +1,11 @@
 import express, {Application, NextFunction, Request, Response} from 'express';
 import helmet from 'helmet';
 import createHttpError from 'http-errors';
+import httpStatus from 'http-status';
 import mongoose from 'mongoose';
 import morgan from 'morgan';
 import config from './config';
-import errorMiddleware from './middlewares/error.middleware';
+import {default as errorMiddleware} from './middlewares/error.middleware';
 import routes from './routes';
 import validateEnv from './utils/validateEnv';
 
@@ -25,7 +26,7 @@ app.use(routes);
 
 //error middleware
 app.use((req: Request, res: Response, next: NextFunction) => {
-  next(createHttpError(404, 'Not found!'));
+  next(createHttpError(httpStatus.NOT_FOUND, 'Not found!'));
 });
 
 app.use(errorMiddleware);

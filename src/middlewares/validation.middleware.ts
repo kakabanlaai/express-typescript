@@ -1,12 +1,15 @@
 import {NextFunction, Request, Response} from 'express';
 import createHttpError from 'http-errors';
-import {Schema} from 'joi';
+import httpStatus from 'http-status';
+import Joi from 'joi';
 
-const validationMiddleware = (validateSchema: Schema) => {
+const validationMiddleware = (validateSchema: object) => {
   return (req: Request, res: Response, next: NextFunction) => {
-    const value = validateSchema.validate(req.body);
+    const value = Joi.object(validateSchema).validate(req.body);
     if (value.error) {
-      next(createHttpError(400, value.error?.message as string));
+      next(
+        createHttpError(httpStatus.BAD_REQUEST, value.error?.message as string)
+      );
     } else {
       next();
     }

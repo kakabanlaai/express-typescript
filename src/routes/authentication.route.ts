@@ -1,21 +1,16 @@
 import {Router} from 'express';
 import {loggingIn, registration} from '../controllers/authentication.controller';
 import validationMiddleware from '../middlewares/validation.middleware';
-import {CreateUserValidSchema, LoginDataValidSchema} from '../models/User.model';
+import authValidation from '../validations/auth.validation';
 
-const path = '/auth';
 const authRoute = Router();
 
 authRoute.post(
-  `${path}/registration`,
-  validationMiddleware(CreateUserValidSchema),
+  '/registration',
+  validationMiddleware(authValidation.register),
   registration
 );
 
-authRoute.post(
-  `${path}/login`,
-  validationMiddleware(LoginDataValidSchema),
-  loggingIn
-);
+authRoute.post('/login', validationMiddleware(authValidation.login), loggingIn);
 
 export default authRoute;

@@ -1,4 +1,4 @@
-import {cleanEnv, port, str} from 'envalid';
+import {cleanEnv, num, port, str} from 'envalid';
 
 const validateEnv = () => {
   cleanEnv(process.env, {
@@ -6,6 +6,8 @@ const validateEnv = () => {
     MONGO_USER: str(),
     MONGO_PATH: str(),
     PORT: port(),
+    JWT_SECRET: str(),
+    JWT_ACCESS_EXPIRATION_SECONDS: num(),
   });
 };
 

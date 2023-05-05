@@ -11,8 +11,8 @@ Content-Type: application/json
 {
   "firstName": "Le",
   "lastName": "Hieu",
-  "email": "xinloiem4@gmail.com",
-  "password": "1234234234"
+  "email": "xinloiem2@gmail.com",
+  "password": "Ab131235656"
 }
 
 ###login
@@ -20,6 +20,6 @@ POST http://localhost:5050/auth/login
 Content-Type: application/json
 
 {
-  "email": "xinloiem4@gmail.com",
-  "password": "1234234234"
+  "email": "xinloiem2@gmail.com",
+  "password": "Ab131235656"
 }

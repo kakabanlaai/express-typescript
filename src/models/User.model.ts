@@ -1,35 +1,58 @@
-import Joi from 'joi';
+import bcrypt from 'bcrypt';
 import {Document, Schema, model} from 'mongoose';
-import IUser from '../interfaces/models/User';
+import IUser from '../interfaces/models/user.interface';
 
-export interface IUserModel extends IUser, Document {}
+interface UserMethods {
+  isPasswordMatch(password: string): boolean;
+}
+export interface IUserModel extends IUser, UserMethods, Document {}
 
-const UserSchema = new Schema<IUserModel>({
-  firstName: {type: String, required: true},
-  lastName: {type: String, required: true},
-  password: {type: String, required: true},
-  email: {type: String, required: true, unique: true},
-});
-
-//create Joi schema
-const userValidateSchema = {
-  firstName: Joi.string().required(),
-  lastName: Joi.string().required(),
-  password: Joi.string().pattern(new RegExp('^[a-zA-Z0-9]{8,30}$')).required(),
-  email: Joi.string().email({minDomainSegments: 2}).required(),
-};
-
-export const CreateUserValidSchema = Joi.object(userValidateSchema);
-
-//remove all required flag
-export const UpdateUserValidateSchema = CreateUserValidSchema.fork(
-  Object.keys(userValidateSchema),
-  (schema) => schema.optional()
+const UserSchema = new Schema<IUserModel>(
+  {
+    id: String,
+    firstName: {type: String, required: true, trim: true},
+    lastName: {type: String, required: true},
+    password: {type: String, required: true},
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+      trim: true,
+      lowercase: true,
+    },
+  },
+  {
+    //hide __v, password, change _id to id
+    toObject: {
+      transform: function (doc, ret) {
+        delete ret.password;
+        delete ret.__v;
+        ret.id = ret._id.toString();
+        delete ret._id;
+      },
+    },
+    toJSON: {
+      transform: function (doc, ret) {
+        delete ret.password;
+        delete ret.__v;
+        ret.id = ret._id.toString();
+        delete ret._id;
+      },
+    },
+  }
 );
 
-export const LoginDataValidSchema = Joi.object({
-  password: Joi.string().pattern(new RegExp('^[a-zA-Z0-9]{8,30}$')).required(),
-  email: Joi.string().email({minDomainSegments: 2}).required(),
+UserSchema.methods.isPasswordMatch = async function (password: string) {
+  const user = this;
+  return bcrypt.compare(password, user.password);
+};
+
+UserSchema.pre('save', async function (this: IUserModel, next) {
+  const user = this;
+  if (user.isModified('password')) {
+    user.password = await bcrypt.hash(user.password, 10);
+  }
+  next();
 });
 
 const User = model<IUserModel>('User', UserSchema);
