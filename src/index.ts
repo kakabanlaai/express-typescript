@@ -7,21 +7,27 @@ import morgan from 'morgan';
 import config from './config';
 import {default as errorMiddleware} from './middlewares/error.middleware';
 import routes from './routes';
-import validateEnv from './utils/validateEnv';
-
-//validate environment variable
-validateEnv();
 
 const app: Application = express();
 
-//initialize middleware
+(async () => {
+  try {
+    await mongoose.connect(config.mongo.url, {
+      serverSelectionTimeoutMS: 3000,
+    });
+    console.log('Database connect success');
+    app.listen(config.server.port, () => {
+      console.log(`Server is running at http://localhost:${config.server.port}`);
+    });
+  } catch (err) {
+    console.error(err);
+  }
+})();
+
 app.use(helmet());
 app.use(morgan('combined'));
-//body parser
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
-
-//router
 app.use(routes);
 
 //error middleware
@@ -30,20 +36,3 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 });
 
 app.use(errorMiddleware);
-
-//connect database
-mongoose
-  .connect(config.mongo.url, {
-    serverSelectionTimeoutMS: 3000,
-  })
-  .then((result) => {
-    console.log('Database connect success!');
-  })
-  .catch((err) => {
-    console.log('Database connect success!', err);
-  });
-
-const port = config.server.port;
-app.listen(port, () => {
-  console.log(`Server is running at http://localhost:${port}`);
-});

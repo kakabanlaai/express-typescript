@@ -1,6 +1,8 @@
 import dotenv from 'dotenv';
+import validateEnv from '../utils/validateEnv';
 
 dotenv.config();
+validateEnv();
 
 const MONGO_USER = process.env.MONGO_USER || '';
 const MONGO_PASSWORD = process.env.MONGO_PASSWORD || '';
@@ -9,10 +11,9 @@ const MONGO_URL = `mongodb+srv://${MONGO_USER}:${MONGO_PASSWORD}${MONGO_PATH}`;
 
 const PORT = process.env.PORT ? Number(process.env.PORT) : 3030;
 
-const JWT_SECRET = process.env.JWT_SECRET;
-const JWT_ACCESS_EXPIRATION_SECONDS = Number(
-  process.env.JWT_ACCESS_EXPIRATION_SECONDS
-);
+const JWT_SECRET = process.env.JWT_SECRET || '';
+const JWT_ACCESS_EXPIRATION_SECONDS =
+  Number(process.env.JWT_ACCESS_EXPIRATION_SECONDS) || 3600;
 
 const config = {
   mongo: {

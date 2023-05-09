@@ -17,5 +17,5 @@ export const loggingIn = catchAsync(async (req: Request, res: Response) => {
   const user = await authService.loginUserWithEmailAndPassword(email, password);
   const token = tokenService.generateToken(user);
   res.setHeader('Set-Cookie', authService.createCookie(token));
-  res.send({user, token});
+  res.send(user);
 });
