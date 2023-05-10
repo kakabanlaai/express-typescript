@@ -1,11 +1,23 @@
-import {NextFunction as ExpressNext, Request, Response} from 'express';
+import {NextFunction, Request, Response} from 'express';
 import createHttpError from 'http-errors';
 import httpStatus from 'http-status';
-import {ObjectSchema} from 'joi';
+import Joi from 'joi';
+import ValidationObj from '../interfaces/vendors/validationObj.interface';
 
-const validateRequest = (schema: ObjectSchema) => {
-  return (req: Request, res: Response, next: ExpressNext) => {
-    const validationResult = schema.validate(req.body);
+const validateRequest = (schema: ValidationObj) => {
+  return (req: Request, res: Response, next: NextFunction) => {
+    //get {body?:..., params?:...} to validate
+    const validateValue = Object.keys(schema).reduce(
+      (obj: {[key: string]: unknown}, key) => {
+        if (Object.prototype.hasOwnProperty.call(req, key)) {
+          obj[key] = req[key as keyof Request];
+        }
+        return obj;
+      },
+      {}
+    );
+
+    const validationResult = Joi.object(schema).validate(validateValue);
     if (validationResult.error) {
       next(
         createHttpError(

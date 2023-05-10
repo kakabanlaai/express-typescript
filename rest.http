@@ -1,8 +1,8 @@
 GET http://localhost:5050/dasd
 
 ###
-GET http://localhost:5050/users
-
+GET http://localhost:5050/users/645a0e63f0596ceb8d73fcb4
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0NWEwZTYzZjA1OTZjZWI4ZDczZmNiNCIsImlhdCI6MTY4MzczNTUzOSwiZXhwIjoxNjgzNzM5MTM5fQ.uqW77jBhKUp8FttgFcffw3WBAt8zuurSW0fa0FzeEQU
 
 ### registration
 POST http://localhost:5050/auth/registration

@@ -9,8 +9,11 @@ const createUser = async (userBody: IUser) => {
       httpStatus.BAD_REQUEST,
       `User with email ${userBody.email} already exists.`
     );
-
   return UserModel.create(userBody);
+};
+
+const getUserById = async (id: string) => {
+  return UserModel.findById(id);
 };
 
 const getUserByEmail = async (email: string) => {
@@ -20,6 +23,7 @@ const getUserByEmail = async (email: string) => {
 const userService = {
   createUser,
   getUserByEmail,
+  getUserById,
 };
 
 export default userService;

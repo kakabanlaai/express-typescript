@@ -1,5 +1,6 @@
 import bcrypt from 'bcrypt';
 import {Document, Model, Schema, model} from 'mongoose';
+import role from '../config/role';
 import IUser from '../interfaces/models/user.interface';
 
 export interface UserDocument extends IUser, Document {
@@ -17,6 +18,11 @@ const UserSchema = new Schema<UserDocument>(
       unique: true,
       trim: true,
       lowercase: true,
+    },
+    role: {
+      type: String,
+      enum: role.roles,
+      default: 'user',
     },
   },
   {

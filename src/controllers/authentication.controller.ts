@@ -9,7 +9,7 @@ export const registration = catchAsync(async (req: Request, res: Response) => {
   const newUser = await userService.createUser(req.body);
   const token = tokenService.generateToken(newUser);
   res.setHeader('Set-Cookie', authService.createCookie(token));
-  res.status(httpStatus.CREATED).send(newUser);
+  res.status(httpStatus.CREATED).send({newUser, token});
 });
 
 export const loggingIn = catchAsync(async (req: Request, res: Response) => {
@@ -17,5 +17,5 @@ export const loggingIn = catchAsync(async (req: Request, res: Response) => {
   const user = await authService.loginUserWithEmailAndPassword(email, password);
   const token = tokenService.generateToken(user);
   res.setHeader('Set-Cookie', authService.createCookie(token));
-  res.send(user);
+  res.send({user, token});
 });

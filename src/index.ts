@@ -4,7 +4,7 @@ import createHttpError from 'http-errors';
 import httpStatus from 'http-status';
 import mongoose from 'mongoose';
 import morgan from 'morgan';
-import config from './config';
+import config from './config/config';
 import {default as errorMiddleware} from './middlewares/error.middleware';
 import routes from './routes';
 
