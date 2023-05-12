@@ -10,7 +10,7 @@ import userService from '../services/user.service';
 
 const auth = (...requiredRights: requiredType[]) => {
   return async (req: RequestWithUser, res: Response, next: NextFunction) => {
-    const token = req.header('Authorization')?.replace('Bearer ', '');
+    const token = req.header('Authorization')?.split(' ')[1];
     if (token) {
       try {
         const jwtPayload = jwt.verify(
@@ -38,7 +38,12 @@ const auth = (...requiredRights: requiredType[]) => {
         }
       } catch (error) {
         // console.log(error);
-        next(createHttpError(httpStatus.UNAUTHORIZED, 'Please authenticate'));
+        next(
+          createHttpError(
+            httpStatus.UNAUTHORIZED,
+            (error as {message: string}).message
+          )
+        );
       }
     } else {
       next(createHttpError(httpStatus.UNAUTHORIZED, 'Missing token'));

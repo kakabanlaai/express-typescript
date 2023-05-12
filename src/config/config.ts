@@ -4,29 +4,22 @@ import validateEnv from '../utils/validateEnv';
 dotenv.config();
 validateEnv();
 
-const MONGO_USER = process.env.MONGO_USER || '';
-const MONGO_PASSWORD = process.env.MONGO_PASSWORD || '';
-const MONGO_PATH = process.env.MONGO_PATH || '';
-const MONGO_URL = `mongodb+srv://${MONGO_USER}:${MONGO_PASSWORD}${MONGO_PATH}`;
-
-const PORT = process.env.PORT ? Number(process.env.PORT) : 3030;
-
-const JWT_SECRET = process.env.JWT_SECRET || '';
-const JWT_ACCESS_EXPIRATION_SECONDS =
-  Number(process.env.JWT_ACCESS_EXPIRATION_SECONDS) || 3600;
-
 const config = {
   mongo: {
-    username: MONGO_USER,
-    password: MONGO_PASSWORD,
-    url: MONGO_URL,
+    username: process.env.MONGO_USER || '',
+    password: process.env.MONGO_PASSWORD || '',
+    url: `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}${
+      process.env.MONGO_PATH || ''
+    }`,
   },
   server: {
-    port: PORT,
+    port: Number(process.env.PORT) || 3030,
   },
   jwt: {
-    secretKey: JWT_SECRET,
-    accessExpiration: JWT_ACCESS_EXPIRATION_SECONDS,
+    secretKey: process.env.JWT_SECRET || '',
+    accessExpiration: Number(process.env.JWT_ACCESS_EXPIRATION_SECONDS) || 3600,
+    refreshExpiration:
+      Number(process.env.JWT_REFRESH_EXPIRATION_DAYS) * 24 * 60 * 60 || 1,
   },
 };
 

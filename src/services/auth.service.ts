@@ -1,6 +1,7 @@
 import createHttpError from 'http-errors';
 import httpStatus from 'http-status';
 import TokenData from '../interfaces/vendors/tokenData.interface';
+import tokenService from './token.service';
 import userService from './user.service';
 
 const loginUserWithEmailAndPassword = async (
@@ -14,13 +15,27 @@ const loginUserWithEmailAndPassword = async (
   return user;
 };
 
-const createCookie = (tokenData: TokenData) => {
-  return `Authorization=${tokenData.token}; HttpOnly; Max-Age=${tokenData.expiresIn}`;
+const refreshAuth = async (refreshToken: string): Promise<TokenData> => {
+  try {
+    const tokenData = tokenService.verifyToken(refreshToken);
+    const user = await userService.getUserById(tokenData.id);
+
+    if (user) {
+      return tokenService.generateToken(user);
+    } else {
+      throw createHttpError(httpStatus.UNAUTHORIZED, 'Please authenticate');
+    }
+  } catch (error) {
+    throw createHttpError(
+      httpStatus.UNAUTHORIZED,
+      (error as {message: string}).message
+    );
+  }
 };
 
 const authService = {
   loginUserWithEmailAndPassword,
-  createCookie,
+  refreshAuth,
 };
 
 export default authService;

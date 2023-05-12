@@ -8,6 +8,7 @@ const validateEnv = () => {
     PORT: port(),
     JWT_SECRET: str(),
     JWT_ACCESS_EXPIRATION_SECONDS: num(),
+    JWT_REFRESH_EXPIRATION_DAYS: num(),
   });
 };
 

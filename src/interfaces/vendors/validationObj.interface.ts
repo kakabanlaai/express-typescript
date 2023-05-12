@@ -1,7 +1,7 @@
 import {ObjectSchema} from 'joi';
 
-export default interface ValidationObj {
-  body?: ObjectSchema;
-  params?: ObjectSchema;
-  query?: ObjectSchema;
+export default interface ValidationObj<T = any> {
+  body?: ObjectSchema<T>;
+  params?: ObjectSchema<T>;
+  query?: ObjectSchema<T>;
 }

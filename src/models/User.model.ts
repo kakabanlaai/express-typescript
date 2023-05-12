@@ -1,5 +1,5 @@
 import bcrypt from 'bcrypt';
-import {Document, Model, Schema, model} from 'mongoose';
+import {Document, Schema, model} from 'mongoose';
 import role from '../config/role';
 import IUser from '../interfaces/models/user.interface';
 
@@ -33,8 +33,11 @@ const UserSchema = new Schema<UserDocument>(
         delete ret.__v;
         ret.id = ret._id.toString();
         delete ret._id;
+        delete ret.createdAt;
+        delete ret.updatedAt;
       },
     },
+    timestamps: true,
   }
 );
 
@@ -51,5 +54,5 @@ UserSchema.pre<UserDocument>('save', async function (next) {
   next();
 });
 
-const UserModel: Model<UserDocument> = model<UserDocument>('User', UserSchema);
+const UserModel = model<UserDocument>('User', UserSchema);
 export default UserModel;

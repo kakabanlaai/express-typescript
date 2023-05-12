@@ -5,17 +5,29 @@ import tokenService from '../services/token.service';
 import userService from '../services/user.service';
 import {catchAsync} from '../utils/catchAsync';
 
-export const registration = catchAsync(async (req: Request, res: Response) => {
+const registration = catchAsync(async (req: Request, res: Response) => {
   const newUser = await userService.createUser(req.body);
   const token = tokenService.generateToken(newUser);
-  res.setHeader('Set-Cookie', authService.createCookie(token));
   res.status(httpStatus.CREATED).send({newUser, token});
 });
 
-export const loggingIn = catchAsync(async (req: Request, res: Response) => {
+const loggingIn = catchAsync(async (req: Request, res: Response) => {
   const {email, password}: {email: string; password: string} = req.body;
   const user = await authService.loginUserWithEmailAndPassword(email, password);
   const token = tokenService.generateToken(user);
-  res.setHeader('Set-Cookie', authService.createCookie(token));
   res.send({user, token});
 });
+
+const refreshToken = catchAsync(async (req: Request, res: Response) => {
+  const {refreshToken}: {refreshToken: string} = req.body;
+  const token = await authService.refreshAuth(refreshToken);
+  res.send(token);
+});
+
+const authController = {
+  refreshToken,
+  registration,
+  loggingIn,
+};
+
+export default authController;

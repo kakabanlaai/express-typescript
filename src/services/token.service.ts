@@ -5,18 +5,34 @@ import TokenData from '../interfaces/vendors/tokenData.interface';
 import {UserDocument} from '../models/User.model';
 
 const generateToken = (user: UserDocument): TokenData => {
-  const {accessExpiration, secretKey} = config.jwt;
+  const {accessExpiration, secretKey, refreshExpiration} = config.jwt;
   const payload: DataStoredInToken = {
     id: user.id,
     role: user.role,
   };
 
   return {
-    expiresIn: accessExpiration,
-    token: jwt.sign(payload, secretKey as string, {expiresIn: accessExpiration}),
+    access: {
+      expiresIn: Date.now() + accessExpiration * 1000,
+      token: jwt.sign(payload, secretKey as string, {
+        expiresIn: accessExpiration,
+      }),
+    },
+    refresh: {
+      expiresIn: Date.now() + refreshExpiration * 1000,
+      token: jwt.sign(payload, secretKey as string, {
+        expiresIn: refreshExpiration,
+      }),
+    },
   };
 };
 
-const tokenService = {generateToken};
+const verifyToken = (token: string) => {
+  const payload = jwt.verify(token, config.jwt.secretKey) as DataStoredInToken;
+
+  return payload;
+};
+
+const tokenService = {generateToken, verifyToken};
 
 export default tokenService;
