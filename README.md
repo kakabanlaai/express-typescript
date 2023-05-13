@@ -50,15 +50,15 @@ EMAIL_FROM=support@yourapp.com
 List of available routes:
 
 **Auth routes**:\
-`POST /v1/auth/register` - register\
-`POST /v1/auth/login` - login\
-`POST /v1/auth/refresh-tokens` - refresh auth tokens\
-`POST /v1/auth/send-verification-email` - send verification email\
-`POST /v1/auth/verify-email` - verify email
+`POST /auth/register` - register\
+`POST /auth/login` - login\
+`POST /auth/refresh-tokens` - refresh auth tokens\
+`POST /auth/send-verification-email` - send verification email\
+`POST /auth/verify-email` - verify email
 
 **User routes**:\
-`POST /v1/users` - create a user\
-`GET /v1/users` - get all users\
-`GET /v1/users/:userId` - get user\
-`PATCH /v1/users/:userId` - update user\
-`DELETE /v1/users/:userId` - delete user
+`POST /users` - create a user\
+`GET /users` - get all users\
+`GET /users/:userId` - get user\
+`PATCH /users/:userId` - update user\
+`DELETE /users/:userId` - delete user\
