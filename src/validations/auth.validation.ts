@@ -26,10 +26,17 @@ const refreshTokens: ValidationObj = {
   }),
 };
 
+const verifyEmail = {
+  query: Joi.object().keys({
+    token: Joi.string().required(),
+  }),
+};
+
 const authValidation = {
   register,
   login,
   refreshTokens,
+  verifyEmail,
 };
 
 export default authValidation;

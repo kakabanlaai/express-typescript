@@ -27,12 +27,24 @@ const generateToken = (user: UserDocument): TokenData => {
   };
 };
 
+const generateVerificationMailToken = (user: UserDocument): string => {
+  const {secretKey} = config.jwt;
+  const payload: DataStoredInToken = {
+    id: user.id,
+    role: user.role,
+  };
+
+  return jwt.sign(payload, secretKey as string, {
+    expiresIn: '10m',
+  });
+};
+
 const verifyToken = (token: string) => {
   const payload = jwt.verify(token, config.jwt.secretKey) as DataStoredInToken;
 
   return payload;
 };
 
-const tokenService = {generateToken, verifyToken};
+const tokenService = {generateToken, verifyToken, generateVerificationMailToken};
 
 export default tokenService;

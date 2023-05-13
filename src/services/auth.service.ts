@@ -33,9 +33,24 @@ const refreshAuth = async (refreshToken: string): Promise<TokenData> => {
   }
 };
 
+const verifyEmail = async (verifyEmailToken: string) => {
+  try {
+    const verifyEmailTokenDoc = await tokenService.verifyToken(verifyEmailToken);
+    const user = await userService.getUserById(verifyEmailTokenDoc.id);
+    if (!user) {
+      throw new Error();
+    }
+    user.isEmailVerified = true;
+    await user.save();
+  } catch (error) {
+    throw createHttpError(httpStatus.UNAUTHORIZED, 'Email verification failed');
+  }
+};
+
 const authService = {
   loginUserWithEmailAndPassword,
   refreshAuth,
+  verifyEmail,
 };
 
 export default authService;

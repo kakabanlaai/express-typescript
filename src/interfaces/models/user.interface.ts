@@ -6,4 +6,5 @@ export default interface IUser {
   firstName: string;
   lastName: string;
   role: unionRoleType;
+  isEmailVerified: boolean;
 }

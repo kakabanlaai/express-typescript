@@ -24,6 +24,10 @@ const UserSchema = new Schema<UserDocument>(
       enum: role.roles,
       default: 'user',
     },
+    isEmailVerified: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     //hide __v, password, change _id to id

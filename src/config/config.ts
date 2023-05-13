@@ -21,6 +21,17 @@ const config = {
     refreshExpiration:
       Number(process.env.JWT_REFRESH_EXPIRATION_DAYS) * 24 * 60 * 60 || 1,
   },
+  email: {
+    smtp: {
+      host: process.env.SMTP_HOST,
+      port: process.env.SMTP_PORT,
+      auth: {
+        user: process.env.SMTP_USERNAME,
+        pass: process.env.SMTP_PASSWORD,
+      },
+    },
+    from: process.env.EMAIL_FROM,
+  },
 };
 
 export default config;

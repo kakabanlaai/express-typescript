@@ -1,6 +1,8 @@
 import {Request, Response} from 'express';
 import httpStatus from 'http-status';
+import RequestWithUser from '../interfaces/vendors/requestWithUser.interface';
 import authService from '../services/auth.service';
+import emailService from '../services/email.service';
 import tokenService from '../services/token.service';
 import userService from '../services/user.service';
 import {catchAsync} from '../utils/catchAsync';
@@ -24,10 +26,27 @@ const refreshToken = catchAsync(async (req: Request, res: Response) => {
   res.send(token);
 });
 
+const sendVerificationMail = catchAsync(
+  async (req: RequestWithUser, res: Response) => {
+    const verifyEmailToken = await tokenService.generateVerificationMailToken(
+      req.user!
+    );
+    await emailService.sendVerificationEmail(req.user!.email, verifyEmailToken);
+    res.status(httpStatus.NO_CONTENT).send();
+  }
+);
+
+const verifyEmail = catchAsync(async (req: Request, res: Response) => {
+  await authService.verifyEmail(req.query.token as string);
+  res.status(httpStatus.NO_CONTENT).send();
+});
+
 const authController = {
   refreshToken,
   registration,
   loggingIn,
+  sendVerificationMail,
+  verifyEmail,
 };
 
 export default authController;
